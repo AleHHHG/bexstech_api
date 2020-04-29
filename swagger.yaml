@@ -1,0 +1,173 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Swagger FAQ Bexs"
+paths:
+  /questions:
+    get:
+      tags:
+      - "questions"
+      summary: "GET Questions"
+      parameters:
+      - name: "page"
+        in: "query"
+        type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Question'
+    post:
+      tags:
+      - "questions"
+      summary: "Add a new question"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Question"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Question"
+        400:
+          description: "Invalid Body"
+          schema:
+            $ref: "#/definitions/Errors"
+  /questions/{question_id}:
+    get:
+      tags:
+      - "questions"
+      summary: "Find question by ID"
+      parameters:
+      - name: "question_id"
+        in: "path"
+        description: "ID of question to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/QuestionWithAnswers"
+        404:
+          description: "Resource not found"
+          schema:
+            $ref: "#/definitions/Message"
+  /answers:
+    post:
+      tags:
+      - "answers"
+      summary: "Add a new answers"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Answers"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Answers"
+        400:
+          description: "Invalid Body"
+          schema:
+            $ref: "#/definitions/Errors"
+  /answers/{answers_id}/like:
+    get:
+      tags:
+      - "answers"
+      summary: "Find answers by ID"
+      parameters:
+      - name: "answers_id"
+        in: "path"
+        description: "ID of answers to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Answers"
+        404:
+          description: "Resource not found"
+          schema:
+            $ref: "#/definitions/Message"
+
+definitions:
+  Question:
+    type: "object"
+    required:
+    - "id"
+    - "text"
+    - "user"
+    - "total_answers"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      text:
+        type: "string"
+      user:
+        type: "string"
+      total_answers:
+        type: "integer"
+  QuestionWithAnswers:
+    type: "object"
+    required:
+    - "id"
+    - "text"
+    - "user"
+    - "total_answers"
+    - "answers"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      text:
+        type: "string"
+      user:
+        type: "string"
+      total_answers:
+        type: "integer"
+      answers:
+        type: "array"
+        items:
+          $ref: '#/definitions/Answers'
+  Answers:
+    type: "object"
+    required:
+    - "id"
+    - "text"
+    - "user"
+    - "like"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      text:
+        type: "string"
+      user:
+        type: "string"
+      like:
+        type: "integer"
+  Errors:
+    type: "object"
+    properties:
+      errors:
+        type: "object"
+  Message:
+    type: "object"
+    properties:
+      message:
+        type: "string"
